@@ -90,3 +90,7 @@ executables:
     source-dirs: nqueens
     main: Main.hs
     dependencies: pizza-g2q-benchmarks
+  stringsearch:
+    source-dirs: stringsearch
+    main: Main.hs
+    dependencies: pizza-g2q-benchmarks
