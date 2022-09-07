@@ -4,6 +4,7 @@
 module Main where
 
 import Control.Monad.Except
+import Data.Either
 import Data.Hashable
 import GHC.Generics
 import Pizza
@@ -132,9 +133,13 @@ solveDeBruijn config depth maxFuel iopairs = do
               evaled <- eval maxFuel #~ app (sketch : toSym i)
               mrgIf (evaled ==~ (toSym o :: Expr)) (return ()) (throwError Main.AssertionError)
           )
-          iopairs ::
-          ExceptT Error UnionM ()
-  res <- solveFallable config (\case Left _ -> conc False; _ -> conc True) constraints
+          iopairs
+  res <- solveFallable config (conc . isRight) constraints
+  {-
+  case res of
+    Left _ -> return Nothing
+    Right mo -> return $ Just $ evaluateSymToCon mo sketch
+  -}
   case res of
     Left _ -> return Nothing
     Right mo -> do
