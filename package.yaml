@@ -82,6 +82,6 @@ ghc-options: -Wall -ferror-spans
 #     - regex-common
 
 executables:
-  badenvsearch:
-    source-dirs: badenvsearch
+  arith:
+    source-dirs: arith
     main: Main.hs

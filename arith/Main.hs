@@ -18,6 +18,10 @@ newtype SymEnv = SymEnv {unSymEnv :: [(Ident, SymVal)]}
   deriving (Show, Generic)
   deriving (EvaluateSym Model) via (Default SymEnv)
 
+newtype Env = Env {unEnv :: [(Ident, Int)]}
+  deriving (Show, Generic)
+  deriving (ToCon SymEnv) via (Default Env)
+
 instance Mergeable SymBool SymEnv where
   mergingStrategy = SimpleStrategy $ \cond (SymEnv l) (SymEnv r) -> SymEnv $ go cond l r
     where
@@ -106,35 +110,44 @@ prog1 =
     Assert (Lt (Mul (Var "n") (I 2)) (Var "z"))
   ]
 
-findCounterExample :: Int -> SymEnv -> Stmts -> IO (Maybe SymEnv)
+mulSum :: Stmts
+mulSum =
+  [ If
+      (Lt (I 0) (Var "x"))
+      [Assert (Not (Eq (Mul (Var "x") (Var "y")) (Add (Var "x") (Var "y"))))]
+      []
+  ]
+
+findCounterExample :: Int -> SymEnv -> Stmts -> IO (Maybe Env)
 findCounterExample unfoldLimit env prog = do
   let evaled = evalStmts unfoldLimit env prog
   res <-
-      solveFallable
-        (UnboundedReasoning z3)
-        (\case Left AssertionFailed -> conc False; _ -> conc True)
-        evaled
+    solveFallable
+      (UnboundedReasoning z3)
+      (\case Left AssertionFailed -> conc True; _ -> conc False)
+      evaled
   case res of
     Left _ -> do
-      r1 <- solveFallable
-        (UnboundedReasoning z3)
-        (\case Left LoopUnfoldingLimitReached -> conc True; _ -> conc False)
-        evaled
+      r1 <-
+        solveFallable
+          (UnboundedReasoning z3)
+          (\case Left LoopUnfoldingLimitReached -> conc True; _ -> conc False)
+          evaled
       case r1 of
         Left _ -> return Nothing
         Right _ -> do
           putStrLn "Warning, the loop unfolding limit can be reached, please consider increasing it"
           return Nothing
-    Right model -> return $ Just $ evaluateSym True model env
-
+    Right model -> return $ Just $ evaluateSymToCon model env
 
 main :: IO ()
 main = do
-  res <-
-    solveFallable
-      (UnboundedReasoning z3)
-      (\case Left AssertionFailed -> conc False; _ -> conc True)
-      (evalStmts 10 (SymEnv [("j", "j")]) prog1)
-  case res of
-    Left _ -> putStrLn "Not found"
-    Right model -> print (evaluateSymToCon model ("j" :: SymVal) :: Int)
+  r1 <- findCounterExample 10 (SymEnv [("j", "j")]) prog1
+  print r1
+  r2 <- findCounterExample 10 (SymEnv [("x", "x"), ("y", "y")]) mulSum
+  print r2
+  case r2 of
+    Just (Env [("x", x), ("y", y)]) -> do
+      print $ x * y
+      print $ x + y
+    _ -> undefined

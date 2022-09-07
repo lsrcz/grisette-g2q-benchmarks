@@ -27,12 +27,12 @@ flag fast
   manual: False
   default: True
 
-executable badenvsearch
+executable arith
   main-is: Main.hs
   other-modules:
       Paths_pizza_benchmarks
   hs-source-dirs:
-      badenvsearch
+      arith
   default-extensions:
       BangPatterns
       ConstraintKinds
