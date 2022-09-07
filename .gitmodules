@@ -1,0 +1,3 @@
+[submodule "deps/pizza"]
+	path = deps/pizza
+	url = git@github.com:lsrcz/pizza.git
