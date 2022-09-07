@@ -86,3 +86,7 @@ executables:
     source-dirs: debruijn
     main: Main.hs
     dependencies: pizza-g2q-benchmarks
+  nqueens:
+    source-dirs: nqueens
+    main: Main.hs
+    dependencies: pizza-g2q-benchmarks
