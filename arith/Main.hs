@@ -5,6 +5,7 @@ module Main where
 import Control.Monad.Except
 import GHC.Generics
 import Pizza
+import Utils.Timing
 
 type Ident = String
 
@@ -142,9 +143,9 @@ findCounterExample unfoldLimit env prog = do
 
 main :: IO ()
 main = do
-  r1 <- findCounterExample 10 (SymEnv [("j", "j")]) prog1
+  r1 <- timeItAll "badEnvSearch prog" $ findCounterExample 10 (SymEnv [("j", "j")]) prog1
   print r1
-  r2 <- findCounterExample 10 (SymEnv [("x", "x"), ("y", "y")]) mulSum
+  r2 <- timeItAll "non-zero Mul x y == Add x y" $ findCounterExample 10 (SymEnv [("x", "x"), ("y", "y")]) mulSum
   print r2
   case r2 of
     Just (Env [("x", x), ("y", y)]) -> do

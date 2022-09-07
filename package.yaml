@@ -82,6 +82,7 @@ executables:
   arith:
     source-dirs: arith
     main: Main.hs
+    dependencies: pizza-g2q-benchmarks
   debruijn:
     source-dirs: debruijn
     main: Main.hs
