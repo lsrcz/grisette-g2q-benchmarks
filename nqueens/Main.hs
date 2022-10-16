@@ -2,7 +2,7 @@
 
 module Main where
 
-import Pizza
+import Grisette
 import Utils.Timing
 
 type Queen = SymIntN 64

@@ -1,16 +1,16 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.35.0.
 --
 -- see: https://github.com/sol/hpack
 
-name:           pizza-g2q-benchmarks
+name:           grisette-g2q-benchmarks
 version:        0.1.0.0
 synopsis:       G2Q Benchmark set for Pizza
 description:    Example symbolic DSLs for benchmarking purpose
 category:       Formal Methods, Theorem Provers, Symbolic Computation, SMT
-homepage:       https://github.com/lsrcz/pizza-haskell#readme
-bug-reports:    https://github.com/lsrcz/pizza-haskell/issues
+homepage:       https://github.com/lsrcz/grisette-haskell#readme
+bug-reports:    https://github.com/lsrcz/grisette-haskell/issues
 author:         Sirui Lu
 maintainer:     Sirui Lu (siruilu@cs.washington.edu)
 copyright:      2021-2022 Sirui Lu
@@ -20,7 +20,7 @@ build-type:     Simple
 
 source-repository head
   type: git
-  location: https://github.com/lsrcz/pizza-haskell
+  location: https://github.com/lsrcz/grisette-haskell
 
 flag fast
   description: Compile with O2 optimization
@@ -31,7 +31,7 @@ library
   exposed-modules:
       Utils.Timing
   other-modules:
-      Paths_pizza_g2q_benchmarks
+      Paths_grisette_g2q_benchmarks
   hs-source-dirs:
       utils
   default-extensions:
@@ -63,21 +63,21 @@ library
     , bytestring >=0.10.12
     , clock >=0.7.1
     , formatting >=6.3.1
+    , grisette ==0.1.0.0
     , hashable >=1.3
     , mtl >=2.2.2
-    , pizza ==0.1.0.0
     , text >=1.2.4.1
     , transformers >=0.5.6.2
+  default-language: Haskell2010
   if flag(fast)
     ghc-options: -O2
   else
     ghc-options: -O0
-  default-language: Haskell2010
 
 executable arith
   main-is: Main.hs
   other-modules:
-      Paths_pizza_g2q_benchmarks
+      Paths_grisette_g2q_benchmarks
   hs-source-dirs:
       arith
   default-extensions:
@@ -109,22 +109,22 @@ executable arith
     , bytestring >=0.10.12
     , clock >=0.7.1
     , formatting >=6.3.1
+    , grisette ==0.1.0.0
+    , grisette-g2q-benchmarks
     , hashable >=1.3
     , mtl >=2.2.2
-    , pizza ==0.1.0.0
-    , pizza-g2q-benchmarks
     , text >=1.2.4.1
     , transformers >=0.5.6.2
+  default-language: Haskell2010
   if flag(fast)
     ghc-options: -O2
   else
     ghc-options: -O0
-  default-language: Haskell2010
 
 executable debruijn
   main-is: Main.hs
   other-modules:
-      Paths_pizza_g2q_benchmarks
+      Paths_grisette_g2q_benchmarks
   hs-source-dirs:
       debruijn
   default-extensions:
@@ -156,22 +156,22 @@ executable debruijn
     , bytestring >=0.10.12
     , clock >=0.7.1
     , formatting >=6.3.1
+    , grisette ==0.1.0.0
+    , grisette-g2q-benchmarks
     , hashable >=1.3
     , mtl >=2.2.2
-    , pizza ==0.1.0.0
-    , pizza-g2q-benchmarks
     , text >=1.2.4.1
     , transformers >=0.5.6.2
+  default-language: Haskell2010
   if flag(fast)
     ghc-options: -O2
   else
     ghc-options: -O0
-  default-language: Haskell2010
 
 executable nqueens
   main-is: Main.hs
   other-modules:
-      Paths_pizza_g2q_benchmarks
+      Paths_grisette_g2q_benchmarks
   hs-source-dirs:
       nqueens
   default-extensions:
@@ -203,22 +203,22 @@ executable nqueens
     , bytestring >=0.10.12
     , clock >=0.7.1
     , formatting >=6.3.1
+    , grisette ==0.1.0.0
+    , grisette-g2q-benchmarks
     , hashable >=1.3
     , mtl >=2.2.2
-    , pizza ==0.1.0.0
-    , pizza-g2q-benchmarks
     , text >=1.2.4.1
     , transformers >=0.5.6.2
+  default-language: Haskell2010
   if flag(fast)
     ghc-options: -O2
   else
     ghc-options: -O0
-  default-language: Haskell2010
 
 executable stringsearch
   main-is: Main.hs
   other-modules:
-      Paths_pizza_g2q_benchmarks
+      Paths_grisette_g2q_benchmarks
   hs-source-dirs:
       stringsearch
   default-extensions:
@@ -250,14 +250,14 @@ executable stringsearch
     , bytestring >=0.10.12
     , clock >=0.7.1
     , formatting >=6.3.1
+    , grisette ==0.1.0.0
+    , grisette-g2q-benchmarks
     , hashable >=1.3
     , mtl >=2.2.2
-    , pizza ==0.1.0.0
-    , pizza-g2q-benchmarks
     , text >=1.2.4.1
     , transformers >=0.5.6.2
+  default-language: Haskell2010
   if flag(fast)
     ghc-options: -O2
   else
     ghc-options: -O0
-  default-language: Haskell2010

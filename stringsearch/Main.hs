@@ -2,7 +2,7 @@
 
 module Main where
 
-import Pizza
+import Grisette
 import Utils.Timing
 
 data RegEx

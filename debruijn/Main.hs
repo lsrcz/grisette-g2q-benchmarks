@@ -7,7 +7,7 @@ import Control.Monad.Except
 import Data.Either
 import Data.Hashable
 import GHC.Generics
-import Pizza
+import Grisette
 import Utils.Timing
 
 type Ident = (UnionM Int)
@@ -124,7 +124,7 @@ notLam = Lam $ app [uVar 3, return falseLam, return trueLam]
 notLam' :: Expr
 notLam' = Lam $ app [uVar 1, uLam $ uLam $ uVar 1, app [uLam $ uVar 1, uLam $ uLam $ uVar 2]]
 
-solveDeBruijn :: PizzaSMTConfig n -> Int -> Int -> [([CExpr], CExpr)] -> IO (Maybe CExpr)
+solveDeBruijn :: GrisetteSMTConfig n -> Int -> Int -> [([CExpr], CExpr)] -> IO (Maybe CExpr)
 solveDeBruijn config depth maxFuel iopairs = do
   let sketch = genSym depth "sketch" :: UnionM Expr
   let constraints =

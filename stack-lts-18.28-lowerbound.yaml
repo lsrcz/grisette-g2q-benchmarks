@@ -66,11 +66,11 @@ extra-deps:
   - tasty-1.1.0.3
   - tasty-test-reporter-0.1.1.2
   - call-stack-0.1.0
-  - deps/pizza/pizza-core
-  - deps/pizza/pizza-symir
-  - deps/pizza/pizza-lib
-  - deps/pizza/pizza-backend-sbv
-  - deps/pizza/pizza
+  - deps/grisette/grisette-core
+  - deps/grisette/grisette-symir
+  - deps/grisette/grisette-lib
+  - deps/grisette/grisette-backend-sbv
+  - deps/grisette/grisette
 
 # Override default flag values for local packages and extra-deps
 # flags: {}

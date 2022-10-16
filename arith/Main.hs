@@ -4,7 +4,7 @@ module Main where
 
 import Control.Monad.Except
 import GHC.Generics
-import Pizza
+import Grisette
 import Utils.Timing
 
 type Ident = String

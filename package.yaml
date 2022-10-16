@@ -1,4 +1,4 @@
-name: pizza-g2q-benchmarks
+name: grisette-g2q-benchmarks
 version: 0.1.0.0
 synopsis: G2Q Benchmark set for Pizza
 description: Example symbolic DSLs for benchmarking purpose
@@ -7,12 +7,12 @@ author: "Sirui Lu"
 maintainer: Sirui Lu (siruilu@cs.washington.edu)
 license: BSD3
 license-file: LICENSE
-github: lsrcz/pizza-haskell
+github: lsrcz/grisette-haskell
 copyright: "2021-2022 Sirui Lu"
 
 dependencies:
 - base > 4.14 && < 5
-- pizza == 0.1.0.0
+- grisette == 0.1.0.0
 - mtl >= 2.2.2
 - transformers >= 0.5.6.2
 - bytestring >= 0.10.12
@@ -82,16 +82,16 @@ executables:
   arith:
     source-dirs: arith
     main: Main.hs
-    dependencies: pizza-g2q-benchmarks
+    dependencies: grisette-g2q-benchmarks
   debruijn:
     source-dirs: debruijn
     main: Main.hs
-    dependencies: pizza-g2q-benchmarks
+    dependencies: grisette-g2q-benchmarks
   nqueens:
     source-dirs: nqueens
     main: Main.hs
-    dependencies: pizza-g2q-benchmarks
+    dependencies: grisette-g2q-benchmarks
   stringsearch:
     source-dirs: stringsearch
     main: Main.hs
-    dependencies: pizza-g2q-benchmarks
+    dependencies: grisette-g2q-benchmarks
