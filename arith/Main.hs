@@ -17,14 +17,14 @@ type SymVal = SymIntN 64
 
 newtype SymEnv = SymEnv {unSymEnv :: [(Ident, SymVal)]}
   deriving (Show, Generic)
-  deriving (EvaluateSym Model) via (Default SymEnv)
+  deriving (GEvaluateSym Model) via (Default SymEnv)
 
 newtype Env = Env {unEnv :: [(Ident, Int)]}
   deriving (Show, Generic)
   deriving (ToCon SymEnv) via (Default Env)
 
-instance Mergeable SymBool SymEnv where
-  mergingStrategy = SimpleStrategy $ \cond (SymEnv l) (SymEnv r) -> SymEnv $ go cond l r
+instance GMergeable SymBool SymEnv where
+  gmergingStrategy = SimpleStrategy $ \cond (SymEnv l) (SymEnv r) -> SymEnv $ go cond l r
     where
       go _ [] [] = []
       go cond ((li, lv) : l) ((ri, rv) : r)
@@ -59,7 +59,7 @@ data Error
   = AssertionFailed
   | LoopUnfoldingLimitReached
   deriving (Show, Eq, Generic)
-  deriving (Mergeable SymBool) via (Default Error)
+  deriving (GMergeable SymBool) via (Default Error)
 
 evalA :: SymEnv -> AExpr -> SymVal
 evalA _ (I i) = fromIntegral i

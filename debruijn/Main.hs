@@ -44,12 +44,12 @@ data Expr
   | Lam (UnionM Expr)
   | App (UnionM Expr) (UnionM Expr)
   deriving (Show, Generic, Eq, Hashable)
-  deriving (Mergeable SymBool, ToSym CExpr, SEq SymBool, EvaluateSym Model) via (Default Expr)
+  deriving (GMergeable SymBool, ToSym CExpr, GSEq SymBool, GEvaluateSym Model) via (Default Expr)
 
 $(makeUnionMWrapper "u" ''Expr)
 
-instance GenSym SymBool (Int, Int) Expr where
-  genSymFresh (gendepth, absdepth)
+instance GGenSym SymBool (Int, Int) Expr where
+  ggenSymFresh (gendepth, absdepth)
     | gendepth <= 0 = genVar
     | otherwise = do
         v <- genVar
@@ -63,14 +63,14 @@ instance GenSym SymBool (Int, Int) Expr where
           then return $ uLam $ uVar 1
           else uVar <$> genSymSimpleFresh (EnumGenBound 1 (absdepth + 1))
 
-instance GenSym SymBool Int Expr where
-  genSymFresh gendepth = genSymFresh (gendepth, 0 :: Int)
+instance GGenSym SymBool Int Expr where
+  ggenSymFresh gendepth = genSymFresh (gendepth, 0 :: Int)
 
 type SymStack = [UnionM Expr]
 
 data Error = FuelError | AssertionError
   deriving (Show, Generic)
-  deriving (Mergeable SymBool) via (Default Error)
+  deriving (GMergeable SymBool) via (Default Error)
 
 eval :: Int -> Expr -> ExceptT Error UnionM Expr
 eval maxFuel = eval' maxFuel []
