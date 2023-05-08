@@ -15,7 +15,7 @@ data RegEx
   deriving (Show)
 
 match :: RegEx -> UnionM [UnionM Char] -> SymBool
-match Empty _ = conc False
+match Empty _ = con False
 match Epsilon s = s ==~ mrgReturn []
 match (Atom c) s = s ==~ mrgReturn [mrgReturn c]
 match x@(Star r) s = (\s1 -> foldl (||~) (s ==~ mrgReturn []) $ uncurry (match2' r x) <$> splits [1 .. length s1] s1) #~ s
@@ -33,7 +33,7 @@ data StringsSpec = StringsSpec {maxLength :: Int, chars :: String}
 newtype StringSearchSpace = StringSearchSpace (UnionM [UnionM Char]) deriving (Show)
 
 instance GenSymSimple StringsSpec StringSearchSpace where
-  genSymSimpleFresh (StringsSpec ml c) = StringSearchSpace <$> (go ml >>= chooseFresh)
+  simpleFresh (StringsSpec ml c) = StringSearchSpace <$> (go ml >>= chooseFresh)
     where
       go m
         | m <= 0 = return [[]]
@@ -48,7 +48,7 @@ instance GenSymSimple StringsSpec StringSearchSpace where
 stringSearch :: Int -> String -> RegEx -> IO (Maybe String)
 stringSearch ml c regex = do
   let StringSearchSpace strings = genSymSimple (StringsSpec ml c) "strings"
-  res <- solveFormula (UnboundedReasoning z3) $ match regex strings
+  res <- solve (precise z3) $ match regex strings
   case res of
     Left _ -> return Nothing
     Right mo -> return $ Just $ evaluateSymToCon mo strings

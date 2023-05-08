@@ -18,7 +18,7 @@
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
 resolver:
-  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/19/20.yaml
+  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/19/33.yaml
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -44,11 +44,7 @@ packages:
 #
 # extra-deps: []
 extra-deps:
-  - deps/grisette/grisette-core
-  - deps/grisette/grisette-symir
-  - deps/grisette/grisette-lib
-  - deps/grisette/grisette-backend-sbv
-  - deps/grisette/grisette
+- grisette-0.2.0.0
 
 # Override default flag values for local packages and extra-deps
 # flags: {}

@@ -31,7 +31,7 @@ allQueensSafe n qs =
 solveQueens :: Int -> IO [Int]
 solveQueens n = do
   let qs = genSymSimple (SimpleListSpec n ()) "a" :: [Queen]
-  res <- solveFormula (UnboundedReasoning z3) (allQueensSafe n qs)
+  res <- solve (precise z3) (allQueensSafe n qs)
   case res of
     Left _ -> error "Should not happen"
     Right mo -> return $ evaluateSymToCon mo qs

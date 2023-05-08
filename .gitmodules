@@ -1,3 +1,0 @@
-[submodule "deps/grisette"]
-	path = deps/grisette
-	url = git@github.com:lsrcz/grisette.git

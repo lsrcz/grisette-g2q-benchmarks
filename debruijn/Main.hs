@@ -44,33 +44,33 @@ data Expr
   | Lam (UnionM Expr)
   | App (UnionM Expr) (UnionM Expr)
   deriving (Show, Generic, Eq, Hashable)
-  deriving (GMergeable SymBool, ToSym CExpr, GSEq SymBool, GEvaluateSym Model) via (Default Expr)
+  deriving (Mergeable, ToSym CExpr, SEq, EvaluateSym) via (Default Expr)
 
-$(makeUnionMWrapper "u" ''Expr)
+$(makeUnionWrapper "u" ''Expr)
 
-instance GGenSym SymBool (Int, Int) Expr where
-  ggenSymFresh (gendepth, absdepth)
+instance GenSym (Int, Int) Expr where
+  fresh (gendepth, absdepth)
     | gendepth <= 0 = genVar
     | otherwise = do
         v <- genVar
-        l <- genSymFresh (gendepth - 1, absdepth + 1)
-        a1 <- genSymFresh (gendepth - 1, absdepth)
-        a2 <- genSymFresh (gendepth - 1, absdepth)
+        l <- fresh (gendepth - 1, absdepth + 1)
+        a1 <- fresh (gendepth - 1, absdepth)
+        a2 <- fresh (gendepth - 1, absdepth)
         chooseUnionFresh [v, uLam l, uApp a1 a2]
     where
       genVar =
         if absdepth <= 0
           then return $ uLam $ uVar 1
-          else uVar <$> genSymSimpleFresh (EnumGenBound 1 (absdepth + 1))
+          else uVar <$> simpleFresh (EnumGenBound 1 (absdepth + 1))
 
-instance GGenSym SymBool Int Expr where
-  ggenSymFresh gendepth = genSymFresh (gendepth, 0 :: Int)
+instance GenSym Int Expr where
+  fresh gendepth = fresh (gendepth, 0 :: Int)
 
 type SymStack = [UnionM Expr]
 
 data Error = FuelError | AssertionError
   deriving (Show, Generic)
-  deriving (GMergeable SymBool) via (Default Error)
+  deriving (Mergeable) via (Default Error)
 
 eval :: Int -> Expr -> ExceptT Error UnionM Expr
 eval maxFuel = eval' maxFuel []
@@ -134,7 +134,7 @@ solveDeBruijn config depth maxFuel iopairs = do
               mrgIf (evaled ==~ (toSym o :: Expr)) (return ()) (throwError Main.AssertionError)
           )
           iopairs
-  res <- solveFallable config (conc . isRight) constraints
+  res <- solveExcept config (con . isRight) constraints
   {-
   case res of
     Left _ -> return Nothing
@@ -175,7 +175,7 @@ notSpec = [([ctrueLam], cfalseLam), ([cfalseLam], ctrueLam)]
 
 main :: IO ()
 main = do
-  let config = UnboundedReasoning z3
+  let config = precise z3
   rid <- timeItAll "id" $ solveDeBruijn config 1 10 idSpec
   print rid
   rconst <- timeItAll "const" $ solveDeBruijn config 2 10 constSpec

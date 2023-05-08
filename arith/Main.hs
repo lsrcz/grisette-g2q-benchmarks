@@ -17,14 +17,14 @@ type SymVal = SymIntN 64
 
 newtype SymEnv = SymEnv {unSymEnv :: [(Ident, SymVal)]}
   deriving (Show, Generic)
-  deriving (GEvaluateSym Model) via (Default SymEnv)
+  deriving (EvaluateSym) via (Default SymEnv)
 
 newtype Env = Env {unEnv :: [(Ident, Int)]}
   deriving (Show, Generic)
   deriving (ToCon SymEnv) via (Default Env)
 
-instance GMergeable SymBool SymEnv where
-  gmergingStrategy = SimpleStrategy $ \cond (SymEnv l) (SymEnv r) -> SymEnv $ go cond l r
+instance Mergeable SymEnv where
+  rootStrategy = SimpleStrategy $ \cond (SymEnv l) (SymEnv r) -> SymEnv $ go cond l r
     where
       go _ [] [] = []
       go cond ((li, lv) : l) ((ri, rv) : r)
@@ -59,7 +59,7 @@ data Error
   = AssertionFailed
   | LoopUnfoldingLimitReached
   deriving (Show, Eq, Generic)
-  deriving (GMergeable SymBool) via (Default Error)
+  deriving (Mergeable) via (Default Error)
 
 evalA :: SymEnv -> AExpr -> SymVal
 evalA _ (I i) = fromIntegral i
@@ -123,16 +123,16 @@ findCounterExample :: Int -> SymEnv -> Stmts -> IO (Maybe Env)
 findCounterExample unfoldLimit env prog = do
   let evaled = evalStmts unfoldLimit env prog
   res <-
-    solveFallable
-      (UnboundedReasoning z3)
-      (\case Left AssertionFailed -> conc True; _ -> conc False)
+    solveExcept
+      (precise z3)
+      (\case Left AssertionFailed -> con True; _ -> con False)
       evaled
   case res of
     Left _ -> do
       r1 <-
-        solveFallable
-          (UnboundedReasoning z3)
-          (\case Left LoopUnfoldingLimitReached -> conc True; _ -> conc False)
+        solveExcept
+          (precise z3)
+          (\case Left LoopUnfoldingLimitReached -> con True; _ -> con False)
           evaled
       case r1 of
         Left _ -> return Nothing
