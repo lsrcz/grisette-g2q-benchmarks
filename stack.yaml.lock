@@ -5,16 +5,15 @@
 
 packages:
 - completed:
-    hackage: grisette-0.2.0.0@sha256:2526b89d25e38003b9f3370c9595d653f38123d656c812ccdc78ffdbf9360e53,7770
+    hackage: grisette-0.3.1.0@sha256:3a654fad40f3543ccdf5c48ead2886acdee3a4e20a6a97ca3e6a1140c5498dde,8287
     pantry-tree:
-      sha256: f10101869e4cb7db427cc72419cbe174efc91cee2b5876912bdfaf7fbc23c0da
-      size: 8988
+      sha256: d547e23ea95ad9ef1211bd42309c2414214c72418657ca391494f606aac5573d
+      size: 9310
   original:
-    hackage: grisette-0.2.0.0
+    hackage: grisette-0.3.1.0
 snapshots:
 - completed:
-    sha256: 6d1532d40621957a25bad5195bfca7938e8a06d923c91bc52aa0f3c41181f2d4
-    size: 619204
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/19/33.yaml
-  original:
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/19/33.yaml
+    sha256: 64d66303f927e87ffe6b8ccf736229bf608731e80d7afdf62bdd63c59f857740
+    size: 640037
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/11.yaml
+  original: lts-21.11

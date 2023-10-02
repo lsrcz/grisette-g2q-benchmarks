@@ -1,0 +1,28 @@
+cradle:
+  stack:
+    - path: "./utils"
+      component: "grisette-g2q-benchmarks:lib"
+
+    - path: "./arith/Main.hs"
+      component: "grisette-g2q-benchmarks:exe:arith"
+
+    - path: "./arith/Paths_grisette_g2q_benchmarks.hs"
+      component: "grisette-g2q-benchmarks:exe:arith"
+
+    - path: "./debruijn/Main.hs"
+      component: "grisette-g2q-benchmarks:exe:debruijn"
+
+    - path: "./debruijn/Paths_grisette_g2q_benchmarks.hs"
+      component: "grisette-g2q-benchmarks:exe:debruijn"
+
+    - path: "./nqueens/Main.hs"
+      component: "grisette-g2q-benchmarks:exe:nqueens"
+
+    - path: "./nqueens/Paths_grisette_g2q_benchmarks.hs"
+      component: "grisette-g2q-benchmarks:exe:nqueens"
+
+    - path: "./stringsearch/Main.hs"
+      component: "grisette-g2q-benchmarks:exe:stringsearch"
+
+    - path: "./stringsearch/Paths_grisette_g2q_benchmarks.hs"
+      component: "grisette-g2q-benchmarks:exe:stringsearch"
