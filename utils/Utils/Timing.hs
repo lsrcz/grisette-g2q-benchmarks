@@ -1,11 +1,15 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Utils.Timing where
+module Utils.Timing (timeItAll) where
 
-import Data.Text.Lazy.Builder
-import Formatting
-import Formatting.Internal
+import Data.Text.Lazy.Builder (Builder)
+import Formatting (Format, bprint, fixed, fprint, string, (%))
+import Formatting.Internal (Format (Format))
 import System.Clock
+  ( Clock (Monotonic, ProcessCPUTime),
+    TimeSpec (TimeSpec),
+    getTime,
+  )
 
 fmt :: Integer -> Builder
 fmt diff =

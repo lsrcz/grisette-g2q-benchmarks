@@ -1,11 +1,35 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Main where
+module Main (main) where
 
 import Control.Monad.Except
-import GHC.Generics
+  ( ExceptT,
+    MonadError (throwError),
+    when,
+  )
+import GHC.Generics (Generic)
 import Grisette
-import Utils.Timing
+  ( Default (Default),
+    EvaluateSym,
+    LogicalOp (symNot, (.&&), (.||)),
+    Mergeable (rootStrategy),
+    MergingStrategy (SimpleStrategy),
+    SEq ((.==)),
+    SOrd ((.<)),
+    SimpleMergeable (mrgIte),
+    Solvable (con),
+    SymBool,
+    SymIntN,
+    ToCon,
+    UnionM,
+    evaluateSymToCon,
+    mrgFoldM,
+    mrgIf,
+    precise,
+    solveExcept,
+    z3,
+  )
+import Utils.Timing (timeItAll)
 
 type Ident = String
 
@@ -72,11 +96,11 @@ evalA env (Add e1 e2) = evalA env e1 + evalA env e2
 evalA env (Mul e1 e2) = evalA env e1 * evalA env e2
 
 evalB :: SymEnv -> BExpr -> SymBool
-evalB env (Not e) = nots (evalB env e)
-evalB env (And e1 e2) = evalB env e1 &&~ evalB env e2
-evalB env (Or e1 e2) = evalB env e1 ||~ evalB env e2
-evalB env (Lt e1 e2) = evalA env e1 <~ evalA env e2
-evalB env (Eq e1 e2) = evalA env e1 ==~ evalA env e2
+evalB env (Not e) = symNot (evalB env e)
+evalB env (And e1 e2) = evalB env e1 .&& evalB env e2
+evalB env (Or e1 e2) = evalB env e1 .|| evalB env e2
+evalB env (Lt e1 e2) = evalA env e1 .< evalA env e2
+evalB env (Eq e1 e2) = evalA env e1 .== evalA env e2
 
 evalStmt :: Int -> SymEnv -> Stmt -> ExceptT Error UnionM SymEnv
 evalStmt _ e (Assign ident aexpr) = return $ SymEnv $ (ident, evalA e aexpr) : (unSymEnv e)

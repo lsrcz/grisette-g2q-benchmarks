@@ -1,9 +1,22 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Main where
+module Main (main) where
 
 import Grisette
-import Utils.Timing
+  ( LogicalOp ((.&&)),
+    SEq ((./=), (.==)),
+    SOrd ((.<=)),
+    SimpleListSpec (SimpleListSpec),
+    SymBool,
+    SymIntN,
+    ToSym (toSym),
+    evaluateSymToCon,
+    genSymSimple,
+    precise,
+    solve,
+    z3,
+  )
+import Utils.Timing (timeItAll)
 
 type Queen = SymIntN 64
 
@@ -12,21 +25,21 @@ indexPairs n =
   [(i, j) | i <- [0 .. n - 1], j <- [i + 1 .. n - 1]]
 
 legal :: Int -> Queen -> SymBool
-legal n qs = 1 <=~ qs &&~ qs <=~ toSym n
+legal n qs = 1 .<= qs .&& qs .<= toSym n
 
 queenPairSafe :: Int -> [Queen] -> (Int, Int) -> SymBool
 queenPairSafe _ qs (i, j) =
   let qs_i = qs !! i
       qs_j = qs !! j
-   in (qs_i /=~ qs_j)
-        &&~ (qs_j - qs_i /=~ toSym (j - i))
-        &&~ (qs_j - qs_i /=~ toSym (i - j))
+   in (qs_i ./= qs_j)
+        .&& (qs_j - qs_i ./= toSym (j - i))
+        .&& (qs_j - qs_i ./= toSym (i - j))
 
 allQueensSafe :: Int -> [Queen] -> SymBool
 allQueensSafe n qs =
-  (n ==~ length qs)
-    &&~ foldl1 (&&~) (legal n <$> qs)
-    &&~ foldl1 (&&~) (queenPairSafe n qs <$> indexPairs n)
+  (n .== length qs)
+    .&& foldl1 (.&&) (legal n <$> qs)
+    .&& foldl1 (.&&) (queenPairSafe n qs <$> indexPairs n)
 
 solveQueens :: Int -> IO [Int]
 solveQueens n = do

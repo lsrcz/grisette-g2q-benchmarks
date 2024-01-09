@@ -1,14 +1,43 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# OPTIONS_GHC -Wno-unused-top-binds #-}
 
-module Main where
+module Main (main) where
 
-import Control.Monad.Except
-import Data.Either
-import Data.Hashable
-import GHC.Generics
+import Control.Monad.Except (ExceptT (ExceptT), MonadError (throwError))
+import Data.Either (isRight)
+import Data.Hashable (Hashable)
+import GHC.Generics (Generic)
 import Grisette
-import Utils.Timing
+  ( Default (Default),
+    EnumGenBound (EnumGenBound),
+    EvaluateSym (evaluateSym),
+    GenSym (fresh),
+    GenSymSimple (simpleFresh),
+    GrisetteSMTConfig,
+    Mergeable,
+    SEq ((.==)),
+    Solvable (con),
+    ToCon (toCon),
+    ToSym (toSym),
+    UnionM,
+    chooseUnionFresh,
+    genSym,
+    makeUnionWrapper,
+    mrgIf,
+    mrgReturn,
+    mrgSingle,
+    mrgTraverse_,
+    precise,
+    solveExcept,
+    z3,
+    (.#),
+    pattern Single,
+  )
+import Grisette.Lib.Control.Monad.Except (mrgThrowError)
+import Grisette.Lib.Control.Monad.Trans.Class (mrgLift)
+import Utils.Timing (timeItAll)
 
 type Ident = (UnionM Int)
 
@@ -77,16 +106,16 @@ eval maxFuel = eval' maxFuel []
 
 eval' :: Int -> SymStack -> Expr -> ExceptT Error UnionM Expr
 eval' fuel _ _ | fuel <= 0 = mrgThrowError FuelError
-eval' fuel (e : stck) (Lam e') = eval' (fuel - 1) stck #~ (rep 1 #~ e #~ e')
-eval' fuel stck (App e1 e2) = eval' (fuel - 1) (e2 : stck) #~ e1
+eval' fuel (e : stck) (Lam e') = eval' (fuel - 1) stck .# (rep 1 .# e .# e')
+eval' fuel stck (App e1 e2) = eval' (fuel - 1) (e2 : stck) .# e1
 eval' _ stck e = mrgLift $ app $ mrgReturn e : stck
 
 rep :: Int -> Expr -> Expr -> UnionM Expr
 rep i e v@(Var j) = do
   j1 <- j
   if i == j1 then mrgReturn e else mrgReturn v
-rep i e (Lam e') = uLam $ rep (i + 1) e #~ e'
-rep i e (App e1 e2) = uApp (rep i e #~ e1) (rep i e #~ e2)
+rep i e (Lam e') = uLam $ rep (i + 1) e .# e'
+rep i e (App e1 e2) = uApp (rep i e .# e1) (rep i e .# e2)
 
 app :: [UnionM Expr] -> UnionM Expr
 app = foldl1 uApp
@@ -130,8 +159,8 @@ solveDeBruijn config depth maxFuel iopairs = do
   let constraints =
         mrgTraverse_
           ( \(i, o) -> do
-              evaled <- eval maxFuel #~ app (sketch : toSym i)
-              mrgIf (evaled ==~ (toSym o :: Expr)) (return ()) (throwError Main.AssertionError)
+              evaled <- eval maxFuel .# app (sketch : toSym i)
+              mrgIf (evaled .== (toSym o :: Expr)) (return ()) (throwError Main.AssertionError)
           )
           iopairs
   res <- solveExcept config (con . isRight) constraints
@@ -143,9 +172,9 @@ solveDeBruijn config depth maxFuel iopairs = do
   case res of
     Left _ -> return Nothing
     Right mo -> do
-      let x = eval maxFuel #~ evaluateSym True mo sketch
+      let x = eval maxFuel .# evaluateSym True mo sketch
       case x of
-        ExceptT (SingleU (Right v)) -> return $ toCon v
+        ExceptT (Single (Right v)) -> return $ toCon v
         _ -> error "Should not happen"
 
 idSpec :: [([CExpr], CExpr)]

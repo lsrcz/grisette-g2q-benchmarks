@@ -5,12 +5,12 @@
 
 packages:
 - completed:
-    hackage: grisette-0.3.1.0@sha256:3a654fad40f3543ccdf5c48ead2886acdee3a4e20a6a97ca3e6a1140c5498dde,8287
+    hackage: grisette-0.4.0.0@sha256:4b57834547bb0a59a1c98fd9a0df81f08cece5e166303a9ee7e6d520316ea8bd,10752
     pantry-tree:
-      sha256: d547e23ea95ad9ef1211bd42309c2414214c72418657ca391494f606aac5573d
-      size: 9310
+      sha256: e8c1d19920e6da3c8947ca644dd17af0ac72eb1879b918b3898387dc6868a217
+      size: 12335
   original:
-    hackage: grisette-0.3.1.0
+    hackage: grisette-0.4.0.0
 snapshots:
 - completed:
     sha256: 64d66303f927e87ffe6b8ccf736229bf608731e80d7afdf62bdd63c59f857740

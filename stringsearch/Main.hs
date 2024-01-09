@@ -1,9 +1,24 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Main where
+module Main (main) where
 
 import Grisette
-import Utils.Timing
+  ( GenSymSimple (simpleFresh),
+    LogicalOp ((.&&), (.||)),
+    SEq ((.==)),
+    Solvable (con),
+    SymBool,
+    UnionM,
+    chooseFresh,
+    evaluateSymToCon,
+    genSymSimple,
+    mrgReturn,
+    precise,
+    solve,
+    z3,
+    (.#),
+  )
+import Utils.Timing (timeItAll)
 
 data RegEx
   = Empty
@@ -16,19 +31,19 @@ data RegEx
 
 match :: RegEx -> UnionM [UnionM Char] -> SymBool
 match Empty _ = con False
-match Epsilon s = s ==~ mrgReturn []
-match (Atom c) s = s ==~ mrgReturn [mrgReturn c]
-match x@(Star r) s = (\s1 -> foldl (||~) (s ==~ mrgReturn []) $ uncurry (match2' r x) <$> splits [1 .. length s1] s1) #~ s
-match (Concat a b) s = (\s1 -> foldl1 (||~) $ uncurry (match2' a b) <$> splits [0 .. length s1] s1) #~ s
-match (Or a b) s = match a s ||~ match b s
+match Epsilon s = s .== mrgReturn []
+match (Atom c) s = s .== mrgReturn [mrgReturn c]
+match x@(Star r) s = (\s1 -> foldl (.||) (s .== mrgReturn []) $ uncurry (match2' r x) <$> splits [1 .. length s1] s1) .# s
+match (Concat a b) s = (\s1 -> foldl1 (.||) $ uncurry (match2' a b) <$> splits [0 .. length s1] s1) .# s
+match (Or a b) s = match a s .|| match b s
 
 match2' :: RegEx -> RegEx -> [UnionM Char] -> [UnionM Char] -> SymBool
-match2' r1 r2 s1 s2 = match r1 (mrgReturn s1) &&~ match r2 (mrgReturn s2)
+match2' r1 r2 s1 s2 = match r1 (mrgReturn s1) .&& match r2 (mrgReturn s2)
 
 splits :: [Int] -> [a] -> [([a], [a])]
 splits ns x = map (`splitAt` x) ns
 
-data StringsSpec = StringsSpec {maxLength :: Int, chars :: String}
+data StringsSpec = StringsSpec {_maxLength :: Int, _chars :: String}
 
 newtype StringSearchSpace = StringSearchSpace (UnionM [UnionM Char]) deriving (Show)
 

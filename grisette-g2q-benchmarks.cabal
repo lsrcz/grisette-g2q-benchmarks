@@ -57,13 +57,13 @@ library
       TypeApplications
       TypeFamilies
       TypeOperators
-  ghc-options: -Wall -ferror-spans
+  ghc-options: -Wextra -Wcompat -Widentities -Wincomplete-record-updates -Wmissing-export-lists -Wmissing-home-modules -Wmissing-import-lists -Wpartial-fields -Wunused-type-patterns -ferror-spans
   build-depends:
       base >4.14 && <5
     , bytestring >=0.10.12
     , clock >=0.7.1
     , formatting >=6.3.1
-    , grisette >=0.2 && <0.4
+    , grisette ==0.4.*
     , hashable >=1.3
     , mtl >=2.2.2
     , text >=1.2.4.1
@@ -103,13 +103,13 @@ executable arith
       TypeApplications
       TypeFamilies
       TypeOperators
-  ghc-options: -Wall -ferror-spans
+  ghc-options: -Wextra -Wcompat -Widentities -Wincomplete-record-updates -Wmissing-export-lists -Wmissing-home-modules -Wmissing-import-lists -Wpartial-fields -Wunused-type-patterns -ferror-spans
   build-depends:
       base >4.14 && <5
     , bytestring >=0.10.12
     , clock >=0.7.1
     , formatting >=6.3.1
-    , grisette >=0.2 && <0.4
+    , grisette ==0.4.*
     , grisette-g2q-benchmarks
     , hashable >=1.3
     , mtl >=2.2.2
@@ -150,13 +150,13 @@ executable debruijn
       TypeApplications
       TypeFamilies
       TypeOperators
-  ghc-options: -Wall -ferror-spans
+  ghc-options: -Wextra -Wcompat -Widentities -Wincomplete-record-updates -Wmissing-export-lists -Wmissing-home-modules -Wmissing-import-lists -Wpartial-fields -Wunused-type-patterns -ferror-spans
   build-depends:
       base >4.14 && <5
     , bytestring >=0.10.12
     , clock >=0.7.1
     , formatting >=6.3.1
-    , grisette >=0.2 && <0.4
+    , grisette ==0.4.*
     , grisette-g2q-benchmarks
     , hashable >=1.3
     , mtl >=2.2.2
@@ -197,13 +197,13 @@ executable nqueens
       TypeApplications
       TypeFamilies
       TypeOperators
-  ghc-options: -Wall -ferror-spans
+  ghc-options: -Wextra -Wcompat -Widentities -Wincomplete-record-updates -Wmissing-export-lists -Wmissing-home-modules -Wmissing-import-lists -Wpartial-fields -Wunused-type-patterns -ferror-spans
   build-depends:
       base >4.14 && <5
     , bytestring >=0.10.12
     , clock >=0.7.1
     , formatting >=6.3.1
-    , grisette >=0.2 && <0.4
+    , grisette ==0.4.*
     , grisette-g2q-benchmarks
     , hashable >=1.3
     , mtl >=2.2.2
@@ -244,13 +244,13 @@ executable stringsearch
       TypeApplications
       TypeFamilies
       TypeOperators
-  ghc-options: -Wall -ferror-spans
+  ghc-options: -Wextra -Wcompat -Widentities -Wincomplete-record-updates -Wmissing-export-lists -Wmissing-home-modules -Wmissing-import-lists -Wpartial-fields -Wunused-type-patterns -ferror-spans
   build-depends:
       base >4.14 && <5
     , bytestring >=0.10.12
     , clock >=0.7.1
     , formatting >=6.3.1
-    , grisette >=0.2 && <0.4
+    , grisette ==0.4.*
     , grisette-g2q-benchmarks
     , hashable >=1.3
     , mtl >=2.2.2
